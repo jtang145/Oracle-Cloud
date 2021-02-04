@@ -1,28 +1,49 @@
-apiVersion: v1
-kind: PersistentVolume
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
-  name: mysql-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  nfs:
-    server: 10.0.0.50
-    path: "/var/nfs/pv099"
+  name: sc-azure-retain
+provisioner: kubernetes.io/azure-disk
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  storageaccounttype: Standard_LRS
+  kind: Managed
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteOnce
+  storageClassName: sc-azure-retain
   resources:
     requests:
-      storage: 10Gi
+      storage: 3Gi
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: mysql-pv-volume
+#  labels:
+#    type: local
+#spec:
+#  storageClassName: manual
+#  capacity:
+#    storage: 10Gi
+#  accessModes:
+#    - ReadWriteOnce
+#  nfs:
+#    server: 10.0.0.50
+#    path: "/var/nfs/pv099"
+#---
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: mysql-pv-claim
+#spec:
+#  storageClassName: manual
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 10Gi
 
